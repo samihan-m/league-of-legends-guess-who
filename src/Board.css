@@ -1,0 +1,23 @@
+.centered {
+    text-align: center;
+}
+#tiles {
+    padding: 2em;
+}
+.my-tile img {
+    border: 1px solid dodgerblue;
+}
+.tile-row {
+    display: flex;
+    justify-content: center;
+    /* background-color: DodgerBlue; */
+}
+.flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    /* background-color: DodgerBlue; */
+}
+button:hover {
+    cursor: pointer;
+}
