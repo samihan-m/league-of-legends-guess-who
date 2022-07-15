@@ -240,45 +240,45 @@ class Board extends Component{
         return(
             <div>
                 <h2 className={"centered"}>Your Champion</h2>
-                    <br/>
-                    <div className={"centered my-tile"}>
-                        <Tile 
-                            champion_id={this.state.your_champion.id} 
-                            champion_name={this.state.your_champion.name} 
-                            src={this.state.your_champion.portrait} 
-                            back_src={this.state.back_image_src}
-                        />
-                    </div>
-                    <br/>
-                    <div className={"centered"}>
-                        <button onClick={this.getRandomChampion}>Get a new Champion</button>
-                        <button onClick={this.generateNewBoard}>Generate a new Board</button>
-                        <button onClick={this.shareThisBoard}>Share this Board</button>
-                    </div>
-                    <div id="tiles" className={"centered flex my-tile"}>
-                        {
-                            this.state.champion_index_batches.map((champion_index_batch, batch_index) => {
-                                return (
-                                    <div key={batch_index} className={"tile-row"}>
-                                        {
-                                            champion_index_batch.map((champion_index, tile_index) => {
-                                                let champion = this.state.champions[champion_index];
-                                                return (
-                                                    <Tile 
-                                                        key={tile_index} 
-                                                        champion_id={champion.id} 
-                                                        champion_name={champion.name} 
-                                                        src={this.getChampionPortrait(champion.id)} 
-                                                        back_src={this.state.back_image_src}
-                                                    />
-                                                )
-                                            })
-                                        }
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
+                <br/>
+                <div className={"centered my-tile"}>
+                    <Tile 
+                        champion_id={this.state.your_champion.id} 
+                        champion_name={this.state.your_champion.name} 
+                        src={this.state.your_champion.portrait} 
+                        back_src={this.state.back_image_src}
+                    />
+                </div>
+                <br/>
+                <div className={"centered"}>
+                    <button onClick={this.getRandomChampion}><i></i>GET A NEW CHAMPION</button>
+                    <button onClick={this.generateNewBoard}><i></i>GENERATE A NEW BOARD</button>
+                    <button onClick={this.shareThisBoard}><i></i>SHARE THIS BOARD</button>
+                </div>
+                <div id="tiles" className={"centered flex my-tile"}>
+                    {
+                        this.state.champion_index_batches.map((champion_index_batch, batch_index) => {
+                            return (
+                                <div key={batch_index} className={"tile-row"}>
+                                    {
+                                        champion_index_batch.map((champion_index, tile_index) => {
+                                            let champion = this.state.champions[champion_index];
+                                            return (
+                                                <Tile 
+                                                    key={tile_index} 
+                                                    champion_id={champion.id} 
+                                                    champion_name={champion.name} 
+                                                    src={this.getChampionPortrait(champion.id)} 
+                                                    back_src={this.state.back_image_src}
+                                                />
+                                            )
+                                        })
+                                    }
+                                </div>
+                            )
+                        })
+                    }
+                </div>
             </div>
         )
     }
