@@ -25,11 +25,11 @@ export default class Tile extends Component {
                 flipDirection="vertical"
             >
                 <div>
-                    <img className={"tile"} key={this.props.champion_id} onClick={this.handleClick} src={this.props.src} alt={this.props.champion_name + " tile"}/>
+                    <img className={"tile"} onClick={this.handleClick} src={this.props.src} alt={this.props.champion_name + " tile"}/>
                     <div className={"tile-label"}>{this.props.champion_name}</div>
                 </div>
                 <div>
-                    <img className={"tile"} key={this.props.champion_id} onClick={this.handleClick} src={this.props.back_src} alt={"Back of " + this.props.champion_name + " tile"}/>
+                    <img className={"tile"} onClick={this.handleClick} src={this.props.back_src} alt={"Back of " + this.props.champion_name + " tile"}/>
                 </div>
             </ReactCardFlip>
         )
