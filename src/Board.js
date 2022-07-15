@@ -173,7 +173,14 @@ class Board extends Component{
             if (board) {
                 try {
                     // Load board from seed
-                    let indexes = JSON.parse(decodeURIComponent(board));
+                    let encoded_champ_indices_string = decodeURIComponent(board);
+                    let encoded_champ_indices = encoded_champ_indices_string.split("-");
+                    let indexes = encoded_champ_indices.map(index => parseInt(parseInt(index, 36).toString(10), 10));
+                    // This method of validation requires that both clients have the same value for this.state.champions_to_show
+                    // This will not work if users gain the ability to change the number of champions to show
+                    if(indexes.length !== this.state.champions_to_show) {
+                        throw new Error("The link you were sent was invalid! Or maybe it was copied wrong? Generating a new board.")
+                    }
                     shuffleArray(indexes);
                     this.setState({champion_indexes_to_use: indexes}, () => {
                         this.finishLoadingBoard()
@@ -193,8 +200,12 @@ class Board extends Component{
                 this.finishLoadingBoard()
             });
 
-            let encoded_champ_indices = encodeURIComponent(JSON.stringify(selected_champion_indexes));
-            window.location.href = `?board=${encoded_champ_indices}`
+            let encoded_indexes = selected_champion_indexes.map(index => {return index.toString(36)})
+            let encoded_champ_indices_string = encodeURIComponent(encoded_indexes.join("-"));
+            console.log(encoded_champ_indices_string);
+            // let encoded_champ_indices = encodeURIComponent(JSON.stringify(selected_champion_indexes));
+            // window.location.href = `?board=${encoded_champ_indices}`
+            window.location.href = `?board=${encoded_champ_indices_string}`
         } catch (error) {
             alert(error);
             console.log(error);
