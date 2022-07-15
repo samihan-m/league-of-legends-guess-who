@@ -4,8 +4,7 @@ import Board from './Board.js';
 function App() {
   return (
     <div className="App"> 
-      <h1 className={"centered"}>LoL Guess Who</h1>
-      <br/>
+      <h1 className={"centered"}>Guess Who? LoL Edition</h1>
       <br/>
       <Board />
     </div>
