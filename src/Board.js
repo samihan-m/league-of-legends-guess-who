@@ -115,6 +115,7 @@ class Board extends Component{
     finishLoadingBoard = () => {
         this.batchChampionsForWindowSize()
         this.getRandomChampion()
+        window.addEventListener("resize", this.handleResize);
     }
 
     batchChampionsForWindowSize = () => {
@@ -194,8 +195,6 @@ class Board extends Component{
 
             let encoded_champ_indices = encodeURIComponent(JSON.stringify(selected_champion_indexes));
             window.location.href = `?board=${encoded_champ_indices}`
-
-            window.addEventListener("resize", this.handleResize);
         } catch (error) {
             alert(error);
             console.log(error);
@@ -223,6 +222,7 @@ class Board extends Component{
     }
     
     handleResize = (event) => {
+        console.log("Handling resize")
         this.batchChampionsForWindowSize()
     }
 
