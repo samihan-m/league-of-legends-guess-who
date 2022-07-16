@@ -162,10 +162,11 @@ class Board extends Component{
             })
 
             function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
+                let shuffledArray = array
+                    .map(value => ({value, sort: Math.random()}))
+                    .sort((a, b) => a.sort - b.sort)
+                    .map(({value}) => value)
+                return shuffledArray;
             }
 
             const queryParams = new URLSearchParams(window.location.search);
@@ -181,7 +182,7 @@ class Board extends Component{
                     if(indexes.length !== this.state.champions_to_show) {
                         throw new Error("The link you were sent was invalid! Or maybe it was copied wrong? Generating a new board.")
                     }
-                    shuffleArray(indexes);
+                    indexes = shuffleArray(indexes);
                     this.setState({champion_indexes_to_use: indexes}, () => {
                         this.finishLoadingBoard()
                     })
@@ -194,7 +195,7 @@ class Board extends Component{
             let champions = Array.from(do_use_live_values ? live_champions : this.state.champions);
 
             let all_champion_indexes = (new Array(champions.length)).fill(undefined).map((_, i) => i);
-            shuffleArray(all_champion_indexes);
+            all_champion_indexes = shuffleArray(all_champion_indexes);
             let selected_champion_indexes = all_champion_indexes.slice(0, this.state.champions_to_show);
             this.setState({champion_indexes_to_use: selected_champion_indexes}, () => {
                 this.finishLoadingBoard()
