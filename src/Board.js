@@ -277,6 +277,7 @@ class Board extends Component{
                         Once you and who you want to play with are on the same URL, play <a href="https://www.youtube.com/watch?v=a76UPzU2VXM">a normal game of Guess Who</a>.<br/><br/>
                         If you want to play a new round with the same board, have all players click {getNewChampionButton}.<br/><br/>
                         If you want to play a round with a new board entirely, click {generateNewBoardButton} (make sure to share the new URL with every player via the SHARE button).<br/><br/>
+                        Feel free to zoom out if you would like to see all the tiles without having to scroll up and down.<br/><br/>
                         Happy playing!<br/><br/>
                     </div>
                     )
