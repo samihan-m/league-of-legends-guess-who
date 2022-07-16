@@ -12,7 +12,7 @@ class Board extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            ddragon_version: "12.13.1",
+            ddragonVersion: "12.13.1",
             champions: [
                 {'id': 'Aatrox', 'name': 'Aatrox'}, {'id': 'Ahri', 'name': 'Ahri'}, {'id': 'Akali', 'name': 'Akali'}, 
                 {'id': 'Akshan', 'name': 'Akshan'}, {'id': 'Alistar', 'name': 'Alistar'}, {'id': 'Amumu', 'name': 'Amumu'}, 
@@ -70,12 +70,12 @@ class Board extends Component{
                 {'id': 'Zed', 'name': 'Zed'}, {'id': 'Zeri', 'name': 'Zeri'}, {'id': 'Ziggs', 'name': 'Ziggs'}, 
                 {'id': 'Zilean', 'name': 'Zilean'}, {'id': 'Zoe', 'name': 'Zoe'}, {'id': 'Zyra', 'name': 'Zyra'}
             ],
-            base_cdn_url: "https://ddragon.leagueoflegends.com/cdn",
-            back_image_src: "https://cdn.discordapp.com/attachments/989474022330884106/996966460142395392/unknown.png",
-            champions_to_show: 36,
-            champion_indexes_to_use: [],
-            champion_index_batches: [[]],
-            your_champion: {
+            baseCdnUrl: "https://ddragon.leagueoflegends.com/cdn",
+            backImageSrc: "https://cdn.discordapp.com/attachments/989474022330884106/996966460142395392/unknown.png",
+            championsToShow: 36,
+            championIndicesToUse: [],
+            championIndicesBatches: [[]],
+            yourChampion: {
                 id: "",
                 name: "",
                 portrait: "https://cdn.discordapp.com/attachments/989474022330884106/996966460142395392/unknown.png",
@@ -84,27 +84,27 @@ class Board extends Component{
         this.handleResize = this.handleResize.bind(this);
     }
 
-    getChampionSplash = (champion_id, skin_index) => {
-        const url = `${this.state.base_cdn_url}/img/champion/splash/${champion_id}_${skin_index}.jpg`; // (0 means default skin)
+    getChampionSplash = (championId, skinIndex) => {
+        const url = `${this.state.baseCdnUrl}/img/champion/splash/${championId}_${skinIndex}.jpg`; // (0 means default skin)
         return url;
     }
     
-    getChampionLoadingScreenImage = (champion_id, skin_index) => {
-        const url = `${this.state.base_cdn_url}/img/champion/loading/${champion_id}_${skin_index}.jpg`; // (0 means default skin)
+    getChampionLoadingScreenImage = (championId, skinIndex) => {
+        const url = `${this.state.baseCdnUrl}/img/champion/loading/${championId}_${skinIndex}.jpg`; // (0 means default skin)
         return url;
     }
     
-    getChampionPortrait = (champion_id) => {
-        const url = `${this.state.base_cdn_url}/${this.state.ddragon_version}/img/champion/${champion_id}.png`;
+    getChampionPortrait = (championId) => {
+        const url = `${this.state.baseCdnUrl}/${this.state.ddragonVersion}/img/champion/${championId}.png`;
         return url;
     }
 
     getRandomChampion = () => {
-        const rand_int = Math.floor(Math.random() * this.state.champion_indexes_to_use.length);
-        const selected_champion_index = this.state.champion_indexes_to_use[rand_int];
+        const rand_int = Math.floor(Math.random() * this.state.championIndicesToUse.length);
+        const selected_champion_index = this.state.championIndicesToUse[rand_int];
         const selected_champion = this.state.champions[selected_champion_index];
         this.setState({
-            your_champion: {
+            yourChampion: {
                 id: selected_champion.id,
                 name: selected_champion.name,
                 portrait: this.getChampionPortrait(selected_champion.id),
@@ -128,10 +128,10 @@ class Board extends Component{
             return res;
         }
         const TILE_WIDTH = 120 + 10 // 120px for the champion portrait, 10px for the margin
-        const tiles_per_row = Math.floor(window.innerWidth / TILE_WIDTH);
-        const copy_of_indexes_to_use = Array.from(this.state.champion_indexes_to_use);
-        const champion_index_batches = spliceIntoChunks(copy_of_indexes_to_use, tiles_per_row);
-        this.setState({champion_index_batches: champion_index_batches});
+        const tilesPerRow = Math.floor(window.innerWidth / TILE_WIDTH);
+        const championIndicesToUseCopy = Array.from(this.state.championIndicesToUse);
+        const championIndicesBatches = spliceIntoChunks(championIndicesToUseCopy, tilesPerRow);
+        this.setState({championIndicesBatches: championIndicesBatches});
     }
 
     componentDidMount() {
@@ -139,24 +139,24 @@ class Board extends Component{
             Axios.get("https://ddragon.leagueoflegends.com/api/versions.json")
             .then(response => {
                 this.setState({
-                    ddragon_version: response.data[0]
+                    ddragonVersion: response.data[0]
                 })
             })
 
-            let live_champions = [];
-            let do_use_live_values = false;
+            let liveChampions = [];
+            let doUseLiveValues = false;
 
-            Axios.get(`https://ddragon.leagueoflegends.com/cdn/${this.state.ddragon_version}/data/en_US/champion.json`)
+            Axios.get(`https://ddragon.leagueoflegends.com/cdn/${this.state.ddragonVersion}/data/en_US/champion.json`)
             .then(response => {
                 for (const key in response.data.data) {
-                    const champion_data = response.data.data[key];
-                    live_champions.push({
-                        id: champion_data.id,
-                        name: champion_data.name,
+                    const championData = response.data.data[key];
+                    liveChampions.push({
+                        id: championData.id,
+                        name: championData.name,
                     });
                 }
-                this.setState({champions: live_champions})
-                do_use_live_values = true;
+                this.setState({champions: liveChampions})
+                doUseLiveValues = true;
             })
 
             function shuffleArray(array) {
@@ -172,16 +172,16 @@ class Board extends Component{
             if (board) {
                 try {
                     // Load board from seed
-                    const encoded_champ_indices_string = decodeURIComponent(board);
-                    const encoded_champ_indices = encoded_champ_indices_string.split("-");
-                    const indexes = encoded_champ_indices.map(index => parseInt(parseInt(index, 36).toString(10), 10));
+                    const championIndicesString = decodeURIComponent(board);
+                    const championIndices = championIndicesString.split("-");
+                    const indices = championIndices.map(index => parseInt(parseInt(index, 36).toString(10), 10));
                     // This method of validation requires that both clients have the same value for this.state.champions_to_show
                     // This will not work if users gain the ability to change the number of champions to show
-                    if(indexes.length !== this.state.champions_to_show) {
+                    if(indices.length !== this.state.championsToShow) {
                         throw new Error("The link you were sent was invalid! Or maybe it was copied wrong? Generating a new board.")
                     }
-                    const shuffled_indexes = shuffleArray(indexes);
-                    this.setState({champion_indexes_to_use: shuffled_indexes}, () => {
+                    const shuffledIndices = shuffleArray(indices);
+                    this.setState({championIndicesToUse: shuffledIndices}, () => {
                         this.finishLoadingBoard()
                     })
                     return;
@@ -190,18 +190,18 @@ class Board extends Component{
                 }
             }
 
-            const champions = do_use_live_values ? live_champions : this.state.champions;
+            const champions = doUseLiveValues ? liveChampions : this.state.champions;
 
-            const all_champion_indexes = (new Array(champions.length)).fill(undefined).map((_, i) => i);
-            const shuffled_indexes = shuffleArray(all_champion_indexes);
-            const selected_champion_indexes = shuffled_indexes.slice(0, this.state.champions_to_show);
-            this.setState({champion_indexes_to_use: selected_champion_indexes}, () => {
+            const allChampionIndices = (new Array(champions.length)).fill(undefined).map((_, i) => i);
+            const shuffledChampionIndices = shuffleArray(allChampionIndices);
+            const selectedChampionIndices = shuffledChampionIndices.slice(0, this.state.championsToShow);
+            this.setState({championIndicesToUse: selectedChampionIndices}, () => {
                 this.finishLoadingBoard();
             });
 
-            const encoded_indexes = selected_champion_indexes.map(index => {return index.toString(36)});
-            const encoded_champ_indices_string = encodeURIComponent(encoded_indexes.join("-"));
-            window.location.href = `?board=${encoded_champ_indices_string}`;
+            const encodedChampionIndices = selectedChampionIndices.map(index => {return index.toString(36)});
+            const encodedChampionIndicesString = encodeURIComponent(encodedChampionIndices.join("-"));
+            window.location.href = `?board=${encodedChampionIndicesString}`;
         } catch (error) {
             alert(error);
             console.log(error);
@@ -250,10 +250,10 @@ class Board extends Component{
                 <br/>
                 <div className={"centered my-tile"}>
                     <Tile 
-                        champion_id={this.state.your_champion.id} 
-                        champion_name={this.state.your_champion.name} 
-                        src={this.state.your_champion.portrait} 
-                        back_src={this.state.back_image_src}
+                        championId={this.state.yourChampion.id} 
+                        championName={this.state.yourChampion.name} 
+                        imageSrc={this.state.yourChampion.portrait} 
+                        backImageSrc={this.state.backImageSrc}
                     />
                 </div>
                 <br/>
@@ -264,19 +264,19 @@ class Board extends Component{
                 </div>
                 <div id="tiles" className={"centered flex my-tile"}>
                     {
-                        this.state.champion_index_batches.map((champion_index_batch, batch_index) => {
+                        this.state.championIndicesBatches.map((championIndicesBatch, batchIndex) => {
                             return (
-                                <div key={batch_index} className={"tile-row"}>
+                                <div key={batchIndex} className={"tile-row"}>
                                     {
-                                        champion_index_batch.map((champion_index, tile_index) => {
-                                            const champion = this.state.champions[champion_index];
+                                        championIndicesBatch.map((championIndex, tileIndex) => {
+                                            const champion = this.state.champions[championIndex];
                                             return (
                                                 <Tile 
-                                                    key={tile_index} 
-                                                    champion_id={champion.id} 
-                                                    champion_name={champion.name} 
-                                                    src={this.getChampionPortrait(champion.id)} 
-                                                    back_src={this.state.back_image_src}
+                                                    key={tileIndex} 
+                                                    championId={champion.id} 
+                                                    championName={champion.name} 
+                                                    imageSrc={this.getChampionPortrait(champion.id)} 
+                                                    backImageSrc={this.state.backImageSrc}
                                                 />
                                             )
                                         })
