@@ -1,6 +1,6 @@
 # How to Play
 
-Open the root domain of the website (www.[ insert url here ].com/) and the site will generate a random selection of 36 League of Legends champions, and populate the game board with it.
+Go to the website and the it will randomly select 36 League of Legends champions and populate a game board with it.
 To play with somebody else, click the SHARE button (or, copy the URL in your search bar) and paste the copied link to the person you want to play with.
 Once you and who you want to play with are on the same URL, play a [normal game of Guess Who](https://www.youtube.com/watch?v=a76UPzU2VXM).
 
