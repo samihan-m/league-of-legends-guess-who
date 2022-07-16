@@ -79,7 +79,8 @@ class Board extends Component{
                 id: "",
                 name: "",
                 portrait: "https://cdn.discordapp.com/attachments/989474022330884106/996966460142395392/unknown.png",
-            }
+            },
+            showHowToPlay: false,
         };
         this.handleResize = this.handleResize.bind(this);
     }
@@ -243,12 +244,19 @@ class Board extends Component{
         gives you a link that you can send to a friend
     */
 
+    toggleHelp = () => {
+        this.setState({showHowToPlay: !this.state.showHowToPlay});
+    }
+
     render() {
+        const getNewChampionButton = <button onClick={this.getRandomChampion}>GET A NEW CHAMPION</button>
+        const generateNewBoardButton = <button onClick={this.generateNewBoard}>GENERATE A NEW BOARD</button>
+        const shareButton = <button onClick={this.shareThisBoard}>SHARE THIS BOARD</button>;
         return(
-            <div>
-                <h2 className={"centered"}>Your Champion</h2>
+            <div className={"centered"}>
+                <h2>Your Champion</h2>
                 <br/>
-                <div className={"centered my-tile"}>
+                <div className={"my-tile"}>
                     <Tile 
                         championId={this.state.yourChampion.id} 
                         championName={this.state.yourChampion.name} 
@@ -257,12 +265,29 @@ class Board extends Component{
                     />
                 </div>
                 <br/>
-                <div className={"centered"}>
-                    <button onClick={this.getRandomChampion}><i></i>GET A NEW CHAMPION</button>
-                    <button onClick={this.generateNewBoard}><i></i>GENERATE A NEW BOARD</button>
-                    <button onClick={this.shareThisBoard}><i></i>SHARE THIS BOARD</button>
+                <button onClick={this.toggleHelp}>{this.state.showHowToPlay ? "HIDE HELP" : "HOW TO PLAY"}</button>
+                <br/>
+                <span id="help">
+                    { this.state.showHowToPlay === true &&
+                    (
+                    <div>
+                        <br/>
+                        The site has randomly selected 36 League of Legends champions and populated a game board with it.<br/><br/>
+                        To play with somebody else, click {shareButton} (or, copy the URL in your search bar) and paste the copied link to the person you want to play with.<br/><br/>
+                        Once you and who you want to play with are on the same URL, play <a href="https://www.youtube.com/watch?v=a76UPzU2VXM">a normal game of Guess Who</a>.<br/><br/>
+                        If you want to play a new round with the same board, have all players click {getNewChampionButton}.<br/><br/>
+                        If you want to play a round with a new board entirely, click {generateNewBoardButton} (make sure to share the new URL with every player via the SHARE button).<br/><br/>
+                        Happy playing!<br/><br/>
+                    </div>
+                    )
+                    }
+                </span>
+                <div>
+                    {getNewChampionButton}
+                    {generateNewBoardButton}
+                    {shareButton}
                 </div>
-                <div id="tiles" className={"centered flex my-tile"}>
+                <div id="tiles" className={"flex my-tile"}>
                     {
                         this.state.championIndicesBatches.map((championIndicesBatch, batchIndex) => {
                             return (
