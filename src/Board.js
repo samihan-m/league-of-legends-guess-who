@@ -100,7 +100,7 @@ class Board extends Component{
     }
 
     getRandomChampion = () => {
-        let rand_int = Math.floor(Math.random() * this.state.champion_indexes_to_use.length);
+        const rand_int = Math.floor(Math.random() * this.state.champion_indexes_to_use.length);
         const selected_champion_index = this.state.champion_indexes_to_use[rand_int];
         const selected_champion = this.state.champions[selected_champion_index];
         this.setState({
@@ -113,8 +113,8 @@ class Board extends Component{
     }
 
     finishLoadingBoard = () => {
-        this.batchChampionsForWindowSize()
-        this.getRandomChampion()
+        this.batchChampionsForWindowSize();
+        this.getRandomChampion();
         window.addEventListener("resize", this.handleResize);
     }
 
@@ -128,10 +128,10 @@ class Board extends Component{
             return res;
         }
         const TILE_WIDTH = 120 + 10 // 120px for the champion portrait, 10px for the margin
-        let tiles_per_row = Math.floor(window.innerWidth / TILE_WIDTH)
-        let copy_of_indexes_to_use = Array.from(this.state.champion_indexes_to_use)
-        let champion_index_batches = spliceIntoChunks(copy_of_indexes_to_use, tiles_per_row)
-        this.setState({champion_index_batches: champion_index_batches})
+        const tiles_per_row = Math.floor(window.innerWidth / TILE_WIDTH);
+        const copy_of_indexes_to_use = Array.from(this.state.champion_indexes_to_use);
+        const champion_index_batches = spliceIntoChunks(copy_of_indexes_to_use, tiles_per_row);
+        this.setState({champion_index_batches: champion_index_batches});
     }
 
     componentDidMount() {
@@ -148,16 +148,14 @@ class Board extends Component{
 
             Axios.get(`https://ddragon.leagueoflegends.com/cdn/${this.state.ddragon_version}/data/en_US/champion.json`)
             .then(response => {
-                for (let champ in response.data.data) {
-                    let champ_data = {
-                        id: champ,
-                        name: response.data.data[champ].name,
-                    } 
-                    live_champions.push(champ_data)
+                for (const key in response.data.data) {
+                    const champion_data = response.data.data[key];
+                    live_champions.push({
+                        id: champion_data.id,
+                        name: champion_data.name,
+                    });
                 }
-                this.setState({
-                    champions: live_champions
-                })
+                this.setState({champions: live_champions})
                 do_use_live_values = true;
             })
 
@@ -174,16 +172,16 @@ class Board extends Component{
             if (board) {
                 try {
                     // Load board from seed
-                    let encoded_champ_indices_string = decodeURIComponent(board);
-                    let encoded_champ_indices = encoded_champ_indices_string.split("-");
-                    let indexes = encoded_champ_indices.map(index => parseInt(parseInt(index, 36).toString(10), 10));
+                    const encoded_champ_indices_string = decodeURIComponent(board);
+                    const encoded_champ_indices = encoded_champ_indices_string.split("-");
+                    const indexes = encoded_champ_indices.map(index => parseInt(parseInt(index, 36).toString(10), 10));
                     // This method of validation requires that both clients have the same value for this.state.champions_to_show
                     // This will not work if users gain the ability to change the number of champions to show
                     if(indexes.length !== this.state.champions_to_show) {
                         throw new Error("The link you were sent was invalid! Or maybe it was copied wrong? Generating a new board.")
                     }
-                    indexes = shuffleArray(indexes);
-                    this.setState({champion_indexes_to_use: indexes}, () => {
+                    const shuffled_indexes = shuffleArray(indexes);
+                    this.setState({champion_indexes_to_use: shuffled_indexes}, () => {
                         this.finishLoadingBoard()
                     })
                     return;
@@ -192,21 +190,18 @@ class Board extends Component{
                 }
             }
 
-            let champions = Array.from(do_use_live_values ? live_champions : this.state.champions);
+            const champions = do_use_live_values ? live_champions : this.state.champions;
 
-            let all_champion_indexes = (new Array(champions.length)).fill(undefined).map((_, i) => i);
-            all_champion_indexes = shuffleArray(all_champion_indexes);
-            let selected_champion_indexes = all_champion_indexes.slice(0, this.state.champions_to_show);
+            const all_champion_indexes = (new Array(champions.length)).fill(undefined).map((_, i) => i);
+            const shuffled_indexes = shuffleArray(all_champion_indexes);
+            const selected_champion_indexes = shuffled_indexes.slice(0, this.state.champions_to_show);
             this.setState({champion_indexes_to_use: selected_champion_indexes}, () => {
-                this.finishLoadingBoard()
+                this.finishLoadingBoard();
             });
 
-            let encoded_indexes = selected_champion_indexes.map(index => {return index.toString(36)})
-            let encoded_champ_indices_string = encodeURIComponent(encoded_indexes.join("-"));
-            console.log(encoded_champ_indices_string);
-            // let encoded_champ_indices = encodeURIComponent(JSON.stringify(selected_champion_indexes));
-            // window.location.href = `?board=${encoded_champ_indices}`
-            window.location.href = `?board=${encoded_champ_indices_string}`
+            const encoded_indexes = selected_champion_indexes.map(index => {return index.toString(36)});
+            const encoded_champ_indices_string = encodeURIComponent(encoded_indexes.join("-"));
+            window.location.href = `?board=${encoded_champ_indices_string}`;
         } catch (error) {
             alert(error);
             console.log(error);
@@ -274,7 +269,7 @@ class Board extends Component{
                                 <div key={batch_index} className={"tile-row"}>
                                     {
                                         champion_index_batch.map((champion_index, tile_index) => {
-                                            let champion = this.state.champions[champion_index];
+                                            const champion = this.state.champions[champion_index];
                                             return (
                                                 <Tile 
                                                     key={tile_index} 
