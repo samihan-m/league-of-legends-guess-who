@@ -9,6 +9,7 @@
 }
 .my-tile img {
     border: 1px solid dodgerblue;
+    margin: 0.1em;
 }
 .tile-row {
     display: flex;
