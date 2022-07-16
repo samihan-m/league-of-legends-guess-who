@@ -30,6 +30,7 @@ export default class Tile extends Component {
                 </div>
                 <div>
                     <img className={"tile"} onClick={this.handleClick} src={this.props.backImageSrc} alt={"Back of " + this.props.championName + " tile"}/>
+                    <div className={"hidden-tile-label"}>‎</div>
                 </div>
             </ReactCardFlip>
         )
