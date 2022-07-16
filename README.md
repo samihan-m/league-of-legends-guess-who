@@ -1,3 +1,16 @@
+# How to Play
+
+Open the root domain of the website (www.[ insert url here ].com/) and the site will generate a random selection of 36 League of Legends champions, and populate the game board with it.
+To play with somebody else, click the SHARE button (or, copy the URL in your search bar) and paste the copied link to the person you want to play with.
+Once you and who you want to play with are on the same URL, play a [normal game of Guess Who](https://www.youtube.com/watch?v=a76UPzU2VXM).
+
+If you want to play a new round with the same board, have all players click 'GET A NEW CHAMPION'.
+If you want to play a round with a new board entirely, click 'GENERATE A NEW BOARD' (make sure to share the new URL with every player via the SHARE button).
+
+Happy playing!
+
+Below is the rest of the initial README.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
