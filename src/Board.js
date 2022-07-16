@@ -283,10 +283,10 @@ class Board extends Component{
                     )
                     }
                 </span>
-                <div>
-                    {getNewChampionButton}
-                    {generateNewBoardButton}
-                    {shareButton}
+                <div className={"button-row-menu"}>
+                    <span className={"button-row-child"}>{getNewChampionButton}</span>
+                    <span className={"button-row-child"}>{shareButton}</span>
+                    <span className={"button-row-child"}>{generateNewBoardButton}</span>
                 </div>
                 <div id="tiles" className={"flex my-tile"}>
                     {

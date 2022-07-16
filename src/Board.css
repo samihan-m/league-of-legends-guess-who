@@ -14,14 +14,25 @@
 .tile-row {
     display: flex;
     justify-content: center;
-    /* background-color: DodgerBlue; */
     padding-bottom: 1em;
+}
+.button-row-child {
+    width: 33%;
+}
+.button-row-child > button {
+    width: 75%;
+}
+.button-row-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-left: 20%;
+    padding-right: 20%;
 }
 .flex {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    /* background-color: DodgerBlue; */
 }
 button {
     display: inline-block;
