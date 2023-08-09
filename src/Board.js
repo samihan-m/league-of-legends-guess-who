@@ -263,6 +263,7 @@ class Board extends Component{
         return(
             <div className={"centered"}>
                 <h2>Your Champion</h2>
+                <h3>(click on any of the champion cards to flip it over)</h3>
                 <br/>
                 <div className={"my-tile"}>
                     <Tile 
