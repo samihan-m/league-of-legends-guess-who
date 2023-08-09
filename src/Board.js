@@ -135,44 +135,50 @@ class Board extends Component{
         this.setState({championIndicesBatches: championIndicesBatches});
     }
 
+    shuffleArray = (array) => {
+        let shuffledArray = array
+            .map(value => ({value, sort: Math.random()}))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({value}) => value)
+        return shuffledArray;
+    }
+
     componentDidMount() {
+
         try {
+            let ddragonVersion = this.state.ddragonVersion;
+            let liveChampions = [];
+            let doUseLiveValues = false;
+
             Axios.get("https://ddragon.leagueoflegends.com/api/versions.json")
-            .then(response => {
+            .then((response) => {
+                ddragonVersion = response.data[0];
                 this.setState({
                     ddragonVersion: response.data[0]
                 })
             })
+            .then(() => {
+                Axios.get(`https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/en_US/champion.json`)
+                .then(response => {
+                    console.log("Received champion data from ddragon for version " + ddragonVersion);
 
-            let liveChampions = [];
-            let doUseLiveValues = false;
-
-            Axios.get(`https://ddragon.leagueoflegends.com/cdn/${this.state.ddragonVersion}/data/en_US/champion.json`)
-            .then(response => {
-                for (const key in response.data.data) {
-                    const championData = response.data.data[key];
-                    liveChampions.push({
-                        id: championData.id,
-                        name: championData.name,
-                    });
-                }
-                this.setState({champions: liveChampions})
-                doUseLiveValues = true;
+                    for (const key in response.data.data) {
+                        const championData = response.data.data[key];
+                        liveChampions.push({
+                            id: championData.id,
+                            name: championData.name,
+                        });
+                    }
+                    this.setState({champions: liveChampions})
+                    doUseLiveValues = true;
+                })
             })
-
-            function shuffleArray(array) {
-                let shuffledArray = array
-                    .map(value => ({value, sort: Math.random()}))
-                    .sort((a, b) => a.sort - b.sort)
-                    .map(({value}) => value)
-                return shuffledArray;
-            }
 
             const queryParams = new URLSearchParams(window.location.search);
             const board = queryParams.get('board');
             if (board) {
+                // Load board from seed
                 try {
-                    // Load board from seed
                     const championIndicesString = decodeURIComponent(board);
                     const championIndices = championIndicesString.split("-");
                     const indices = championIndices.map(index => parseInt(parseInt(index, 36).toString(10), 10));
@@ -181,28 +187,30 @@ class Board extends Component{
                     if(indices.length !== this.state.championsToShow) {
                         throw new Error("The link you were sent was invalid! Or maybe it was copied wrong? Generating a new board.")
                     }
-                    const shuffledIndices = shuffleArray(indices);
+                    const shuffledIndices = this.shuffleArray(indices);
                     this.setState({championIndicesToUse: shuffledIndices}, () => {
                         this.finishLoadingBoard()
                     })
                     return;
                 } catch (error) {
-                    alert(error);
+                    this.generateNewBoard();
                 }
             }
+            else {
+                const champions = doUseLiveValues ? liveChampions : this.state.champions;
 
-            const champions = doUseLiveValues ? liveChampions : this.state.champions;
+                const allChampionIndices = (new Array(champions.length)).fill(undefined).map((_, i) => i);
+                const shuffledChampionIndices = this.shuffleArray(allChampionIndices);
+                const selectedChampionIndices = shuffledChampionIndices.slice(0, this.state.championsToShow);
+                this.setState({championIndicesToUse: selectedChampionIndices}, () => {
+                    this.finishLoadingBoard();
+                });
 
-            const allChampionIndices = (new Array(champions.length)).fill(undefined).map((_, i) => i);
-            const shuffledChampionIndices = shuffleArray(allChampionIndices);
-            const selectedChampionIndices = shuffledChampionIndices.slice(0, this.state.championsToShow);
-            this.setState({championIndicesToUse: selectedChampionIndices}, () => {
-                this.finishLoadingBoard();
-            });
+                const encodedChampionIndices = selectedChampionIndices.map(index => {return index.toString(36)});
+                const encodedChampionIndicesString = encodeURIComponent(encodedChampionIndices.join("-"));
+                window.history.pushState({}, null, `?board=${encodedChampionIndicesString}`)
+            }
 
-            const encodedChampionIndices = selectedChampionIndices.map(index => {return index.toString(36)});
-            const encodedChampionIndicesString = encodeURIComponent(encodedChampionIndices.join("-"));
-            window.location.href = `?board=${encodedChampionIndicesString}`;
         } catch (error) {
             alert(error);
             console.log(error);
