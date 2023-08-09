@@ -29,11 +29,7 @@
     padding-left: 20%;
     padding-right: 20%;
 }
-.flex {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-}
+
 button {
     display: inline-block;
     cursor: pointer;
@@ -54,4 +50,13 @@ button:hover {
 }
 h2 {
     font-weight: normal;
+}
+
+.tiles {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-left: 20%;
+    padding-right: 20%;
 }

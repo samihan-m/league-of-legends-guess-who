@@ -1,3 +1,7 @@
 .tile:hover {
     cursor: pointer;
 }
+
+.tile-label {
+    margin-bottom: 0.75em;
+}
