@@ -82,7 +82,6 @@ class Board extends Component{
             },
             showHowToPlay: false,
         };
-        this.handleResize = this.handleResize.bind(this);
     }
 
     getChampionSplash = (championId, skinIndex) => {
@@ -116,7 +115,6 @@ class Board extends Component{
     finishLoadingBoard = () => {
         this.batchChampionsForWindowSize();
         this.getRandomChampion();
-        window.addEventListener("resize", this.handleResize);
     }
 
     batchChampionsForWindowSize = () => {
@@ -232,16 +230,7 @@ class Board extends Component{
             console.log(err);
         });
     }
-
-    componentWillUnmount() {
-        window.addEventListener("resize", null);
-    }
     
-    handleResize = (event) => {
-        console.log("Handling resize")
-        this.batchChampionsForWindowSize()
-    }
-
     // original plan, saved for progeny
     /*
     Main page -> play game
@@ -297,26 +286,22 @@ class Board extends Component{
                     <span className={"button-row-child"}>{shareButton}</span>
                     <span className={"button-row-child"}>{generateNewBoardButton}</span>
                 </div>
-                <div id="tiles" className={"flex my-tile"}>
+                <div id="tiles" className={"my-tile tiles"}>
                     {
                         this.state.championIndicesBatches.map((championIndicesBatch, batchIndex) => {
                             return (
-                                <div key={batchIndex} className={"tile-row"}>
-                                    {
-                                        championIndicesBatch.map((championIndex, tileIndex) => {
-                                            const champion = this.state.champions[championIndex];
-                                            return (
-                                                <Tile 
-                                                    key={tileIndex} 
-                                                    championId={champion.id} 
-                                                    championName={champion.name} 
-                                                    imageSrc={this.getChampionPortrait(champion.id)} 
-                                                    backImageSrc={this.state.backImageSrc}
-                                                />
-                                            )
-                                        })
-                                    }
-                                </div>
+                                championIndicesBatch.map((championIndex, tileIndex) => {
+                                    const champion = this.state.champions[championIndex];
+                                    return (
+                                        <Tile 
+                                            key={tileIndex} 
+                                            championId={champion.id} 
+                                            championName={champion.name} 
+                                            imageSrc={this.getChampionPortrait(champion.id)} 
+                                            backImageSrc={this.state.backImageSrc}
+                                        />
+                                    )
+                                })
                             )
                         })
                     }
