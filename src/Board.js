@@ -3,6 +3,7 @@ import Axios from 'axios';
 import './Board.css'
 import Tile from './Tile.js';
 import { useParams } from "react-router-dom";
+import tile_backing from "./tile_backing.png";
 
 function withParams(Component) {
   return props => <Component {...props} params={useParams()} />;
@@ -71,14 +72,13 @@ class Board extends Component{
                 {'id': 'Zilean', 'name': 'Zilean'}, {'id': 'Zoe', 'name': 'Zoe'}, {'id': 'Zyra', 'name': 'Zyra'}
             ],
             baseCdnUrl: "https://ddragon.leagueoflegends.com/cdn",
-            backImageSrc: "https://cdn.discordapp.com/attachments/989474022330884106/996966460142395392/unknown.png",
             championsToShow: 36,
             championIndicesToUse: [],
             championIndicesBatches: [[]],
             yourChampion: {
                 id: "",
                 name: "",
-                portrait: "https://cdn.discordapp.com/attachments/989474022330884106/996966460142395392/unknown.png",
+                portrait: "",
             },
             showHowToPlay: false,
         };
@@ -259,7 +259,7 @@ class Board extends Component{
                         championId={this.state.yourChampion.id} 
                         championName={this.state.yourChampion.name} 
                         imageSrc={this.state.yourChampion.portrait} 
-                        backImageSrc={this.state.backImageSrc}
+                        backImageSrc={tile_backing}
                     />
                 </div>
                 <br/>
@@ -298,7 +298,7 @@ class Board extends Component{
                                             championId={champion.id} 
                                             championName={champion.name} 
                                             imageSrc={this.getChampionPortrait(champion.id)} 
-                                            backImageSrc={this.state.backImageSrc}
+                                            backImageSrc={tile_backing}
                                         />
                                     )
                                 })
