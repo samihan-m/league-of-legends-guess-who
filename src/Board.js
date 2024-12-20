@@ -141,36 +141,37 @@ class Board extends Component{
         return shuffledArray;
     }
 
-    componentDidMount() {
+    async componentDidMount() {
 
         try {
             let ddragonVersion = this.state.ddragonVersion;
             let liveChampions = [];
             let doUseLiveValues = false;
 
-            Axios.get("https://ddragon.leagueoflegends.com/api/versions.json")
-            .then((response) => {
-                ddragonVersion = response.data[0];
+            try {
+                const ddragonVersions = await Axios.get("https://ddragon.leagueoflegends.com/api/versions.json");
+                ddragonVersion = ddragonVersions.data[0];
                 this.setState({
-                    ddragonVersion: response.data[0]
-                })
-            })
-            .then(() => {
-                Axios.get(`https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/en_US/champion.json`)
-                .then(response => {
-                    console.log("Received champion data from ddragon for version " + ddragonVersion);
+                    ddragonVersion: ddragonVersions.data[0]
+                });
 
-                    for (const key in response.data.data) {
-                        const championData = response.data.data[key];
-                        liveChampions.push({
-                            id: championData.id,
-                            name: championData.name,
-                        });
+                const allChampionData = await Axios.get(`https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/data/en_US/champion.json`);
+                console.log("Received champion data from ddragon for version " + ddragonVersion);
+                console.log(allChampionData.data.data);
+                liveChampions = Object.values(allChampionData.data.data).map((championData) => {
+                    return {
+                        id: championData.id,
+                        name: championData.name,
                     }
-                    this.setState({champions: liveChampions})
-                    doUseLiveValues = true;
                 })
-            })
+
+                this.setState({champions: liveChampions})
+                doUseLiveValues = true;
+            }
+            catch (error) {
+                console.log("Failed to get live champion data from ddragon. Using static data instead.");
+                console.log("Error: " + error);
+            }
 
             const queryParams = new URLSearchParams(window.location.search);
             const board = queryParams.get('board');
